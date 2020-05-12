@@ -4,7 +4,10 @@ resource "aws_instance" "webserver" {
   ami = "ami-0e342d72b12109f91" # Ubuntu 18.04 Server
   instance_type = "t3.micro"
   vpc_security_group_ids = [aws_security_group.webserver.id]
-  user_data = file("user_data.sh")
+  user_data = templatefile("user_data.sh.tpl", {
+    app0 = "apache2",
+    app1 = "wget",
+  })
   tags = {
     Name = "Web Server by Terraform"
   }
