@@ -5,12 +5,18 @@ resource "aws_instance" "webserver" {
   instance_type = "t3.micro"
   vpc_security_group_ids = [aws_security_group.webserver.id]
   user_data = templatefile("user_data.sh.tpl", {
-    app0 = "apache2",
-    app1 = "wget",
+    app0 = "apache2"
   })
   tags = {
     Name = "Web Server by Terraform"
   }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_eip" "webserver_static_ip" {
+  instance = aws_instance.webserver.id
 }
 
 resource "aws_security_group" "webserver" {
