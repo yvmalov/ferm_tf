@@ -4,14 +4,7 @@ resource "aws_instance" "webserver" {
   ami = "ami-0e342d72b12109f91" # Ubuntu 18.04 Server
   instance_type = "t3.micro"
   vpc_security_group_ids = [aws_security_group.webserver.id]
-  user_data = <<EOF
-#!/bin/bash
-apt update -y
-apt install -y apache2
-echo "Web server started" > /var/www/html/index.html
-systemctl start apache2
-systemctl enable apache2
-EOF
+  user_data = file("user_data.sh")
   tags = {
     Name = "Web Server by Terraform"
   }
